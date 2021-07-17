@@ -1,0 +1,29 @@
+version: "3.1"
+
+services:
+  mongo:
+    image: mongo
+    restart: "no"
+    volumes:
+      - .config:/etc/mongo/
+      - .log:/var/log/mongodb/
+      - .data:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: zhuCong
+    command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+
+  mongo-express:
+    image: mongo-express
+    restart: "no"
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: zhuCong
+      ME_CONFIG_BASICAUTH_USERNAME: root # web密码
+      ME_CONFIG_BASICAUTH_PASSWORD: zhuCong # web密码

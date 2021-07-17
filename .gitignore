@@ -1,0 +1,12 @@
+mariadb/.data/*
+mariadb/.log
+
+mongodb/.data
+mongodb/.log
+
+postgresql/.data
+
+redis/.data
+
+zentao/.www
+zentao/.data

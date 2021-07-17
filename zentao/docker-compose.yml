@@ -1,0 +1,13 @@
+version: "3.1"
+
+services:
+  zentao:
+    image: easysoft/zentao:latest
+    restart: "no"
+    ports:
+      - 8889:80
+    volumes:
+      - .www:/www/zentaopms/
+      - .data:/var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: zhuCong

@@ -1,0 +1,22 @@
+version: "3.1"
+
+services:
+  # 配置文件.data/postgresql.conf
+  # 默认用户名: postgres
+  postgresql:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - .data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: zhuCong
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 18080:8080 # 外部端口:内部端口
+    environment:
+      ADMINER_DEFAULT_SERVER: postgresql

@@ -1,0 +1,42 @@
+[client]
+port= 3306
+
+[mysqld]
+port                    = 3306
+log-error 			    = /var/log/mysql/error.log
+slow_query_log 
+long_query_time 	    = 3
+slow_query_log_file	    = /var/log/mysql/slow_query.log
+
+skip-name-resolve
+key_buffer_size         = 16M
+max_allowed_packet		= 1024M
+table_cache             = 64
+sort_buffer_size        = 512K
+net_buffer_length       = 8K
+read_buffer_size        = 256K
+read_rnd_buffer_size    = 512K
+myisam_sort_buffer_size = 8M
+feedback=ON
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[isamchk]
+key_buffer_size  = 20M
+sort_buffer_size = 20M
+read_buffer      = 2M
+write_buffer     = 2M
+
+[myisamchk]
+key_buffer_size  = 20M
+sort_buffer_size = 20M
+read_buffer      = 2M
+write_buffer     = 2M
+
+[mysqlhotcopy]
+interactive-timeout
