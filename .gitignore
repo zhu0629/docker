@@ -11,3 +11,6 @@ redis/.data/*
 
 zentao/.www/*
 zentao/.data/*
+
+mssql/.data/*
+mssql/.log/*

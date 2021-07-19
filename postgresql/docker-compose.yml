@@ -12,6 +12,11 @@ services:
       - .data:/var/lib/postgresql/data/
     environment:
       POSTGRES_PASSWORD: zhuCong
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 45s
+      timeout: 30s
+      retries: 3
 
   adminer:
     image: adminer:latest
@@ -20,3 +25,9 @@ services:
       - 18080:8080 # 外部端口:内部端口
     environment:
       ADMINER_DEFAULT_SERVER: postgresql
+
+    healthcheck:
+      test: curl -f http://localhost:8080/ || exit 1
+      interval: 45s
+      timeout: 30s
+      retries: 3

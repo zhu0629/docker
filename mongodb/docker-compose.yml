@@ -14,10 +14,15 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: zhuCong
     command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 45s
+      timeout: 30s
+      retries: 3
 
   mongo-express:
     image: mongo-express
-    restart: "no"
+    restart: unless-stopped
     ports:
       - 8081:8081
     environment:

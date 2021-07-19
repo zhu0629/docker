@@ -11,3 +11,9 @@ services:
       - .data:/data
 
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+
+    healthcheck:
+      test: redis-cli ping
+      interval: 45s
+      timeout: 30s
+      retries: 3
