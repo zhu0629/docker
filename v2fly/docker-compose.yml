@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+  v2fly:
+    container_name: v2fly
+    image: docker.io/v2fly/v2fly-core:latest
+    restart: "no"
+    ports:
+      - 8801:8801
+      - 1080:1080
+      - 1081:1081
+    volumes:
+      - .config/config.json:/etc/v2ray/config.json
+      - .log:/var/log/v2ray/
+
+    healthcheck:
+      test: netstat -anp | grep 8801
+      interval: 45s
+      timeout: 30s
+      retries: 3

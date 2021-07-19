@@ -1,0 +1,207 @@
+{
+    "log": {
+        "access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log",
+        "loglevel": "error"
+    },
+    "inbounds": [
+        {
+            "port": 8801,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "b124a3d5-2f97-4f7e-86fe-de1d3916884c",
+                        "alterId": 32
+                    }
+                ]
+            },
+            "tag": "in-0",
+            "streamSettings": {
+                "network": "kcp",
+                "kcpSettings": {
+                    "uplinkCapacity": 15,
+                    "downlinkCapacity": 100,
+                    "readBufferSize": 2,
+                    "mtu": 1350,
+                    "header": {
+                        "type": "wechat-video",
+                        "request": null,
+                        "response": null
+                    },
+                    "tti": 50,
+                    "congestion": false,
+                    "writeBufferSize": 2
+                },
+                "wsSettings": null,
+                "tcpSettings": null,
+                "tlsSettings": {},
+                "security": ""
+            }
+        },
+        {
+            "port": 8801,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "b124a3d5-2f97-4f7e-86fe-de1d3916884c",
+                        "alterId": 32
+                    }
+                ]
+            },
+            "tag": "in-1",
+            "streamSettings": {
+                "network": "tcp",
+                "security": "none",
+                "tcpSettings": {}
+            }
+        },
+        {
+            "tag": "socks",
+            "port": 1080,
+            "listen": "0.0.0.0",
+            "protocol": "socks",
+            "sniffing": {
+                "enabled": false,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
+            },
+            "settings": {
+                "auth": "noauth",
+                "udp": true,
+                "allowTransparent": false
+            }
+        },
+        {
+            "tag": "http",
+            "port": 1081,
+            "listen": "0.0.0.0",
+            "protocol": "http",
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
+            },
+            "settings": {
+                "udp": false,
+                "allowTransparent": false
+            }
+        },
+        {
+            "tag": "api",
+            "port": 57657,
+            "listen": "127.0.0.1",
+            "protocol": "dokodemo-door",
+            "settings": {
+                "udp": false,
+                "address": "127.0.0.1",
+                "allowTransparent": false
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "tag": "proxy",
+            "protocol": "vmess",
+            "settings": {
+                "vnext": [
+                    {
+                        "address": "x.x.x.x",
+                        "port": 10629,
+                        "users": [
+                            {
+                                "id": "b124a3d5-2f97-4f7e-86fe-de1d3916884c",
+                                "alterId": 32,
+                                "email": "t@t.tt",
+                                "security": "auto"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "none",
+                "tcpSettings": {}
+            },
+            "mux": {
+                "enabled": true,
+                "concurrency": 8
+            }
+        },
+        {
+            "tag": "direct",
+            "protocol": "freedom",
+            "settings": {}
+        },
+        {
+            "tag": "block",
+            "protocol": "blackhole",
+            "settings": {
+                "response": {
+                    "type": "http"
+                }
+            }
+        }
+    ],
+    "stats": {},
+    "api": {
+        "tag": "api",
+        "services": [
+            "StatsService"
+        ]
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "inboundTag": [
+                    "api"
+                ],
+                "outboundTag": "api"
+            },
+            {
+                "type": "field",
+                "outboundTag": "direct",
+                "domain": [
+                    "domain:obdstar.top",
+                    "domain:obdstar.com",
+                    "domain:obdup.com"
+                ]
+            },
+            {
+                "type": "field",
+                "outboundTag": "block",
+                "domain": [
+                    "geosite:category-ads-all"
+                ]
+            },
+            {
+                "type": "field",
+                "outboundTag": "direct",
+                "domain": [
+                    "geosite:cn"
+                ]
+            },
+            {
+                "type": "field",
+                "outboundTag": "direct",
+                "ip": [
+                    "geoip:private",
+                    "geoip:cn"
+                ]
+            },
+            {
+                "type": "field",
+                "port": "0-10629",
+                "outboundTag": "proxy"
+            }
+        ]
+    }
+}
