@@ -14,3 +14,5 @@ zentao/.data/*
 
 mssql/.data/*
 mssql/.log/*
+
+v2fly/.log/*

@@ -4,6 +4,7 @@ services:
   # 配置文件.data/postgresql.conf
   # 默认用户名: postgres
   postgresql:
+    container_name: postgresql
     image: postgres:latest
     restart: always
     ports:
@@ -19,6 +20,7 @@ services:
       retries: 3
 
   adminer:
+    container_name: postgresql_adminer
     image: adminer:latest
     restart: always
     ports:

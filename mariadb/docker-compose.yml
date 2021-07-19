@@ -2,6 +2,7 @@ version: "3.1"
 
 services:
   mariadb:
+    container_name: mariadb
     image: mariadb:latest
     restart: always
     ports:
@@ -19,6 +20,7 @@ services:
       retries: 3
 
   adminer:
+    container_name: maraidb_adminer
     image: adminer:latest
     restart: always
     ports:
