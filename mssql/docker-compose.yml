@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:latest
+    restart: "no"
+    ports:
+      - 1433:1433
+    volumes:
+      - .data:/var/opt/mssql/data/
+      - .log:/var/opt/mssql/log/
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: zhuCong_daddy # sa密码要足够复杂, 不然无法启动.
+      TZ: Asia/Shanghai
+      MSSQL_MEMORY_LIMIT_MB: 2048
+      MSSQL_AGENT_ENABLED: "true"
+      MSSQL_PID: Developer # Developer | Express | Standard | Enterprise | EnterpriseCore
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 45s
+      timeout: 30s
+      retries: 3
