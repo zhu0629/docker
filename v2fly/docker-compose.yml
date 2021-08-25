@@ -6,11 +6,12 @@ services:
     image: docker.io/v2fly/v2fly-core:latest
     restart: "no"
     ports:
-      - 8801:8801
+      - 8801:8801/tcp
+      - 8801:8801/udp
       - 1080:1080
       - 1081:1081
     volumes:
-      - .config/config.json:/etc/v2ray/config.json
+      - .config/:/etc/v2ray/
       - .log:/var/log/v2ray/
 
     healthcheck:

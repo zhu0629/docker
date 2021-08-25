@@ -2,13 +2,20 @@
 port= 3306
 
 [mysqld]
+server_id 				= 629					# 唯一id
+log-bin					= master-bin
+log-bin-index			= master-bin.index
+binlog_format 			= row 					# 行模式
+sync_binlog 			= ON 					# 刷新binlog到磁盘
+log_slave_updates 		= ON					# 同步设置的重要参数
+datadir					= /var/lib/mysql		# 数据目录
 port                    = 3306
 log-error 			    = /var/log/mysql/error.log
-slow_query_log 
 long_query_time 	    = 3
+slow_query_log 			= ON
 slow_query_log_file	    = /var/log/mysql/slow_query.log
 
-skip-name-resolve
+skip-name-resolve 		= ON
 key_buffer_size         = 16M
 max_allowed_packet		= 1024M
 table_cache             = 64
@@ -17,7 +24,9 @@ net_buffer_length       = 8K
 read_buffer_size        = 256K
 read_rnd_buffer_size    = 512K
 myisam_sort_buffer_size = 8M
-feedback=ON
+feedback				= ON
+innodb_file_per_table 	= ON
+
 
 [mysqldump]
 quick
