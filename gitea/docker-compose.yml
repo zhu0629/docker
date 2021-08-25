@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+  gitea:
+    container_name: gitea
+    image: gitea/gitea:latest
+    restart: always
+    ports:
+      - 3000:3000
+      - 2222:22
+    volumes:
+      - .data:/data/
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    healthcheck:
+      test: netstat -anp | grep 3000
+      interval: 45s
+      timeout: 30s
+      retries: 3

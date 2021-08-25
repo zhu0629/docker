@@ -1,0 +1,14 @@
+version: "3.1"
+
+services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins:lts-jdk11
+    restart: always
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - .data:/var/jenkins_home
+    environment:
+      JENKINS_SLAVE_AGENT_PORT: 50000

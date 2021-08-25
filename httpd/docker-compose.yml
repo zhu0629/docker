@@ -1,0 +1,19 @@
+version: "3.1"
+
+services:
+  httpd:
+    container_name: httpd
+    image: httpd:latest
+    restart: "no"
+    ports:
+      - 8080:80
+    volumes:
+      - .config:/usr/local/apache2/conf/
+      - .log:/usr/local/apache2/log/
+      - .www:/usr/local/apache2/htdocs/
+
+    healthcheck:
+      test: netstat -anp | grep 8801
+      interval: 45s
+      timeout: 30s
+      retries: 3

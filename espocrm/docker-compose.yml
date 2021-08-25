@@ -1,0 +1,43 @@
+version: "3.1"
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - .db/.config:/etc/mysql/conf.d/
+      - .db/.data:/var/lib/mysql/
+      - .db/.log:/var/log/mysql/
+    environment:
+      MARIADB_ROOT_PASSWORD: zhuCong
+    healthcheck:
+      test: mysql --host=127.0.0.1 --user=root --password=$$MARIADB_ROOT_PASSWORD --silent --execute "SELECT 1;" || exit 1
+      interval: 45s
+      timeout: 30s
+      retries: 3
+      
+  espocrm:
+    container_name: espocrm
+    image: espocrm/espocrm:latest
+    environment:
+      ESPOCRM_DATABASE_HOST: mariadb
+      ESPOCRM_DATABASE_PASSWORD: zhuCong
+      ESPOCRM_ADMIN_USERNAME: admin
+      ESPOCRM_ADMIN_PASSWORD: zhuCong
+      ESPOCRM_SITE_URL: "http://localhost:8080"
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - .www:/var/www/html
+
+  espocrm-daemon:
+    container_name: espocrm-daemon
+    image: espocrm/espocrm:latest
+    volumes:
+      - .www:/var/www/html
+    restart: always
+    entrypoint: docker-daemon.sh

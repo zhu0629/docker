@@ -16,3 +16,13 @@ mssql/.data/*
 mssql/.log/*
 
 v2fly/.log/*
+
+espocrm/.db
+
+gitea/.data
+
+httpd/.config
+httpd/.www
+
+jenkins/.data
+
