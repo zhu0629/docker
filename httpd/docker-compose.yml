@@ -1,19 +1,25 @@
-version: "3.1"
+version: "3.2"
 
 services:
   httpd:
     container_name: httpd
     image: httpd:latest
-    restart: "no"
+    restart: "unless-stopped"
     ports:
-      - 8080:80
-    volumes:
-      - .config:/usr/local/apache2/conf/
-      - .log:/usr/local/apache2/log/
-      - .www:/usr/local/apache2/htdocs/
+      - 8800:80
 
-    healthcheck:
-      test: netstat -anp | grep 8801
-      interval: 45s
-      timeout: 30s
-      retries: 3
+    volumes:
+      - ./files:/home/files/
+      - ./conf:/usr/local/apache2/conf/
+      - ./logs:/usr/local/apache2/logs/
+      - ./htdocs:/usr/local/apache2/htdocs/
+
+      # 时区
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5" # 限制50%的CPU占用 
+          memory: 1024M # 限制1024M内存占用 

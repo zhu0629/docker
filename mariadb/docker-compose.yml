@@ -2,33 +2,42 @@ version: "3.1"
 
 services:
   mariadb:
-    container_name: mariadb
-    image: mariadb:latest
+    # 容器名称
+    container_name: mariadb 
+
+    # 镜像名:Tag, 
+    # Tag相当于版本, latest为最新版本, 
+    # 访问 https://hub.docker.com 查找镜像名和Tag, 
+    image: mariadb:latest  
+
+    # 容器重启策略
+    # always 在容器退出时总是重启容器
+    # on-failure，在容器非正常退出时（退出状态非0），才会重启容器
+    # on-failure:3，指定启动的次数，在容器非正常退出时重启容器，最多重启3次
+    # unless-stopped，在容器退出时总是重启容器，但是不考虑在Docker守护进程启动时就已经停止了的容器
     restart: always
+
+    # 端口映射(主机端口:镜像端口)
+    # 下例将容器的3306端口映射到主机53306
     ports:
-      - 3306:3306
-    volumes:
-      - .config:/etc/mysql/conf.d/
-      - .data:/var/lib/mysql/
-      - .log:/var/log/mysql/
+      - 53306:3306 
+
+    # 目录挂载(主机目录:容器目录:权限), 
+    # 下例将data目录映射到容器/var/lib/mysql/  参阅官方文档我们可以知道这个目录是存放数据的目录
+    # 如果要设置为只读, 加上ro即可. 容器内程序就无法修改该文件
+    volumes:                
+      - ./data:/var/lib/mysql/
+      - /etc/localtime:/etc/localtime:ro
+
+    # 环境变量
+    # 需要查阅镜像发布者提供的文档
     environment:
-      MARIADB_ROOT_PASSWORD: zhuCong
+      MARIADB_ROOT_PASSWORD: zhuCong 
+
+    # 健康状况检查
+    # 可选配置, 配置后会自动检测服务是否正常, docker ps命令可以查看容器的健康状态
     healthcheck:
       test: mysql --host=127.0.0.1 --user=root --password=$$MARIADB_ROOT_PASSWORD --silent --execute "SELECT 1;" || exit 1
       interval: 45s
       timeout: 30s
       retries: 3
-
-  # adminer:
-  #   container_name: maraidb_adminer
-  #   image: adminer:latest
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #     ADMINER_DEFAULT_SERVER: mariadb
-  #   healthcheck:
-  #     test: curl -f http://localhost:8080/ || exit 1
-  #     interval: 45s
-  #     timeout: 30s
-  #     retries: 3

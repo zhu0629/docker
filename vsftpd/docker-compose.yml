@@ -1,0 +1,17 @@
+version: '3'
+services:
+  vsftpd:
+    container_name: vsftpd
+    image: "fauria/vsftpd"
+    volumes:
+      - ./data:/home/vsftpd/zhuc
+    ports:
+      - "20:20"
+      - "2121:21"
+      - "21100-21110:21100-21110"
+    environment:
+      - FTP_USER=zhuc
+      - FTP_PASS=zhuCong
+      - PASV_ADDRESS=127.0.0.1
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110

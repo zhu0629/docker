@@ -17,12 +17,14 @@ mssql/.log/*
 
 v2fly/.log/*
 
-espocrm/.db
+espocrm/db
+espocrm/www
 
 gitea/.data
 
 httpd/.config
 httpd/.www
 
-jenkins/.data
+jenkins/data
 
+next-terminal/data

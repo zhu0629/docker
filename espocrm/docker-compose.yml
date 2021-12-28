@@ -8,9 +8,9 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - .db/.config:/etc/mysql/conf.d/
-      - .db/.data:/var/lib/mysql/
-      - .db/.log:/var/log/mysql/
+      - ./db/config/:/etc/mysql/conf.d/
+      - ./db/data/:/var/lib/mysql/
+      - ./db/log/:/var/log/mysql/
     environment:
       MARIADB_ROOT_PASSWORD: zhuCong
     healthcheck:
@@ -18,26 +18,28 @@ services:
       interval: 45s
       timeout: 30s
       retries: 3
-      
+
   espocrm:
     container_name: espocrm
     image: espocrm/espocrm:latest
-    environment:
-      ESPOCRM_DATABASE_HOST: mariadb
-      ESPOCRM_DATABASE_PASSWORD: zhuCong
-      ESPOCRM_ADMIN_USERNAME: admin
-      ESPOCRM_ADMIN_PASSWORD: zhuCong
-      ESPOCRM_SITE_URL: "http://localhost:8080"
+    # environment:
+    #   ESPOCRM_DATABASE_HOST: "192.168.3.99"
+    #   ESPOCRM_DATABASE_PASSWORD: zhuCong
+    #   ESPOCRM_ADMIN_USERNAME: admin
+    #   ESPOCRM_ADMIN_PASSWORD: zhuCong
+    #   ESPOCRM_SITE_URL: "https://localhost:8080"
     restart: always
     ports:
-      - 8080:80
+      - 11885:80
+      - 18885:443
     volumes:
-      - .www:/var/www/html
+      - ./www/:/var/www/html/
+      - ./apache/:/etc/apache2/
 
   espocrm-daemon:
     container_name: espocrm-daemon
     image: espocrm/espocrm:latest
     volumes:
-      - .www:/var/www/html
+      - ./www/:/var/www/html
     restart: always
     entrypoint: docker-daemon.sh

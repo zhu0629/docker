@@ -7,11 +7,18 @@ services:
     restart: always
     ports:
       - 3000:3000
-      - 2222:22
     volumes:
       - .data:/data/
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 200M
 
     healthcheck:
       test: netstat -anp | grep 3000
