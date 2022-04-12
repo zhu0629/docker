@@ -1,0 +1,129 @@
+import asyncio
+import json
+from typing import Any, AnyStr, Dict, List, Union
+
+from loguru import logger
+
+import json
+from request import http
+
+
+class WorkWx(object):
+    def __init__(self):
+        self.host: str = 'https://qyapi.weixin.qq.com/cgi-bin'
+        self.crop_id: str = 'ww593ae23211cb7cbd'
+        self.app_secret: str = 'Jc1TqDADdofL4Mb0XzzT--g2zuLgKj1G9sSfUr0V660'
+        self.access_token: Union[str, None] = None
+
+    async def get_access_token(self) -> bool:
+        """
+        获取Token
+        @param:
+        @return: 
+        @desc:
+        """
+        if self.access_token:
+            return
+
+        url: str = f'{self.host}/gettoken'
+        params: Dict[str, AnyStr] = {
+            'corpid': self.crop_id,
+            'corpsecret': self.app_secret,
+        }
+        res: Dict = await http(url=url, params=params, return_type=dict)
+        token: str = res.get('data', {}).get('access_token', '')
+        if not token:
+            logger.error(f'获取Token失败{res}')
+            return False
+        else:
+            self.access_token = token
+            logger.debug(f'获取Token成功. {self.access_token}')
+            return True
+
+    async def get_user_simple_list(self, dept_id: int = 0, fetch_child: int = 1) -> List[Dict[str, Any]]:
+        """
+        获取部门用户ID
+        @param:
+                department_id	获取的部门id
+                fetch_child 是否递归获取子部门下面的成员：1-递归获取，0-只获取本部门
+        @return: 
+        @desc:
+        """
+
+        await self.get_access_token()
+        url: str = f'{self.host}/user/simplelist'
+        params: Dict[str, AnyStr] = {
+            'access_token': self.access_token,
+            'department_id': dept_id,
+            'fetch_child': fetch_child
+        }
+        res: Dict = await http(url=url, params=params, return_type=dict)
+        res_data: Dict = res.get('data', {})
+        res_code: int = res_data.get('errcode', -1)
+        user_list: List[Dict[str, Any]] = []
+
+        if res_code != 0:
+            logger.error(f'获取部门用户基本信息错误. {res=} {params=}')
+        else:
+            user_list = res_data.get('userlist', [])
+            logger.debug(f'获取部门用户基本信息成功.')
+        return user_list
+
+    async def get_external_contact_by_user(self, user_id_list=[], cursor=''):
+        """
+        根据用户ID批量获取客户详情
+        @param:
+        @return: 
+        @desc:
+        """
+
+        await self.get_access_token()
+        url: str = f'{self.host}/externalcontact/batch/get_by_user'
+        params: Dict[str, AnyStr] = {
+            'access_token': self.access_token,
+            "debug": 1
+        }
+        data: Dict[str, Any] = {
+            "userid_list": user_id_list,
+            "cursor": cursor,
+            "limit": 100
+        }
+        external_contacts = []
+        data = json.dumps(data)
+        res: Dict = await http(method='POST', url=url, params=params, data=data, return_type=dict)
+        res_data: Dict = res.get('data', {})
+
+        res_errcode: int = res_data.get('errcode', -1)
+        if res_errcode != 0:
+            logger.error(f'根据用户ID批量获取客户详情失败 {res=}')
+            return []
+
+        external_contact = res_data.get('external_contact_list', [])
+        external_contacts.extend(external_contact)
+        next_cursor = res_data.get('next_cursor', '')
+        if next_cursor:
+            external_contact = await self.get_external_contact_by_user(user_id_list=user_id_list, cursor=next_cursor)
+            external_contacts.extend(external_contact)
+
+        logger.debug(f'根据用户ID批量获取客户详情成功 {len(external_contacts)}')
+        return external_contacts
+
+
+async def main():
+    wx = WorkWx()
+    user_simple_list = await wx.get_user_simple_list(dept_id=5)
+    user_id_list = [f.get('userid') for f in user_simple_list]
+
+    # external_contacts = await wx.get_external_contact_by_user(user_id_list=user_id_list)
+    # for external_contact in external_contacts:
+    #     follow_info = external_contact.get('follow_info')
+    #     userid = follow_info.get('follow_info')
+
+
+
+    # import pyperclip
+    # pyperclip.copy(json.dumps(external_contacts, ensure_ascii=False))
+    # print(len(external_contacts))
+
+if __name__ == '__main__':
+    asyncio.run(main())

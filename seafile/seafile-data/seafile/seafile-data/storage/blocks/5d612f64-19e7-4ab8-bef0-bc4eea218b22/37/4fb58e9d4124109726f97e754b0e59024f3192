@@ -1,0 +1,99 @@
+import asyncio
+import typing
+from json import JSONDecodeError
+
+import httpx
+
+
+async def http(
+        return_type: typing.Any = str,
+        raise_for_status: bool = True,
+        **httpx_kwargs: typing.Dict[typing.AnyStr, typing.Any]
+) -> typing.Dict[typing.AnyStr, typing.Any]:
+
+    """
+    HTTP请求
+    @param: return_type: 返回类型, 返回str或dict或者bytes
+    @param: raise_for_status: 当返回不成功的HTTP状态码时, 抛出错误HTTPStatusError
+    @param: httpx_kwargs: httpx的参数
+    @return:
+    @desc:
+    """
+
+    httpx_kwargs.setdefault('method', 'GET')                 # 默认方法GET
+    httpx_kwargs.setdefault('timeout', (10, 10))             # 默认超时时间
+    httpx_kwargs.setdefault('allow_redirects', False)        # 允许重定向
+    httpx_kwargs.setdefault('headers', {'user-agent': 'ZC/0.0.1'})
+    
+    result = {'code': 0, 'msg': ''}
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.request(**httpx_kwargs)
+            if raise_for_status:
+                response.raise_for_status()
+            result['code'] = response.status_code
+            result['headers'] = response.headers
+
+            # 返回数据类型
+            if return_type == str:
+                result['data'] = response.text
+            elif return_type == dict:
+                result['data'] = response.json()
+            elif return_type == bytes:
+                result['data'] = response.content
+
+        except JSONDecodeError as err:
+            result['code'] = -1
+            result['msg'] = f'HTTP错误, 解析为Json失败. {err=}'
+        except Exception as err:
+            result['code'] = -1
+            result['msg'] = f'HTTP错误, {err=}'
+
+        return result
+
+
+if __name__ == '__main__':
+    tasks = [
+        {
+            'return_type': str,
+            'raise_for_status': False,
+            'method': 'GET',
+            'url': '<http://www.httpbin.org/get?user=zhuc>'
+        },
+        {
+            'return_type': dict,
+            'raise_for_status': True,
+            'method': 'POST',
+            'url': '<http://www.httpbin.org/post>',
+            'data':
+                {
+                    'user': 'zhuc'
+                }
+        },
+        {
+            'return_type': dict,
+            'raise_for_status': False,
+            'method': 'DELETE',
+            'url': '<http://www.httpbin.org/delete>'
+        },
+        {
+            'return_type': bytes,
+            'raise_for_status': True,
+            'method': 'GET',
+            'url': '<http://www.httpbin.org/image>',
+            'headers': {
+                'accept': 'image/webp'
+            }
+        }
+    ]
+
+    event_loop = asyncio.get_event_loop()
+    loop_tasks = [http(**task) for task in tasks]
+    loop_results = event_loop.run_until_complete(asyncio.gather(*loop_tasks))
+
+    for (task, result) in zip(tasks, loop_results):
+        print(f'{task=}')
+        print(f'result->code: {result.get("code")}')
+        print(f'result->msg: {result.get("msg")}')
+        print(f'result->data: {result.get("data")}')
+        print('*'*60)

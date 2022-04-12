@@ -1,0 +1,25 @@
+172.21.0.1 - - [12/Apr/2022 06:52:45] code 403, message Permission denied.
+172.21.0.1 - - [12/Apr/2022 06:52:45] "GET /add-task?file_id=b4c1e3e84be93516406b1d213000d0fac3ad80e1&doctype=xlsx&raw_path=http%3A%2F%2F192.168.2.120%2Fseafhttp%2Ffiles%2Fabec9dc5-34af-4456-8baf-dc075a701415%2F%25E7%25A0%2594%25E5%258F%2591%25E8%25B5%2584%25E4%25BA%25A7%25E7%25BC%2596%25E5%258F%25B7%25E5%2591%25BD%25E5%2590%258D%25E8%25A7%2584%25E5%2588%2599.xlsx HTTP/1.1" 403 -
+172.21.0.1 - - [12/Apr/2022 06:52:45] code 403, message Permission denied.
+172.21.0.1 - - [12/Apr/2022 06:52:45] "GET /query-status?file_id=b4c1e3e84be93516406b1d213000d0fac3ad80e1&doctype=spreadsheet HTTP/1.1" 403 -
+[2022-04-12 06:57:02,553] [DEBUG] utils:69 run Running command: "/usr/bin/python3" "/opt/office_convertor/unoconv.py" "-vvv" "--pipe" "seafilepipe" "-l", cwd = /opt/office_convertor
+[2022-04-12 06:57:05,558] [DEBUG] utils:71 run Running command: "ps" "-ef"
+[2022-04-12 06:57:05,562] [INFO] root:101 start unoconv process already start.
+[2022-04-12 06:57:05.565474] Start converter on 0.0.0.0:8089
+[2022-04-12 06:57:05.567857] Start converter http server.
+convert_server.py:70: DeprecationWarning: urllib.parse.splitquery() is deprecated as of 3.8, use urllib.parse.urlparse() instead
+  path, arguments = parse.splitquery(self.path)
+172.22.0.1 - - [12/Apr/2022 06:57:15] "GET /add-task?file_id=b4c1e3e84be93516406b1d213000d0fac3ad80e1&doctype=xlsx&raw_path=http%3A%2F%2F192.168.2.120%2Fseafhttp%2Ffiles%2F99532a5c-fa60-48c1-be3b-7da647da3da4%2F%25E7%25A0%2594%25E5%258F%2591%25E8%25B5%2584%25E4%25BA%25A7%25E7%25BC%2596%25E5%258F%25B7%25E5%2591%25BD%25E5%2590%258D%25E8%25A7%2584%25E5%2588%2599.xlsx HTTP/1.1" 200 -
+[2022-04-12 06:57:15,550] [DEBUG] root:187 _fetch_document_or_pdf start to fetch task <type: xlsx, id: b4c1e3e84be93516406b1d213000d0fac3ad80e1>
+172.22.0.1 - - [12/Apr/2022 06:57:15] "GET /query-status?file_id=b4c1e3e84be93516406b1d213000d0fac3ad80e1&doctype=spreadsheet HTTP/1.1" 200 -
+[2022-04-12 06:57:16,100] [DEBUG] root:156 _convert_excel_to_html successfully convert excel <type: xlsx, id: b4c1e3e84be93516406b1d213000d0fac3ad80e1> to html
+[2022-04-12 06:57:16,100] [DEBUG] root:92 set_status removing temporary document /tmp/tmpe7z_k_gh.xlsx
+172.22.0.1 - - [12/Apr/2022 06:57:18] "GET /query-status?file_id=b4c1e3e84be93516406b1d213000d0fac3ad80e1&doctype=spreadsheet HTTP/1.1" 200 -
+172.22.0.1 - - [12/Apr/2022 06:57:18] "GET /get-converted-page?static_filename=index.html&file_id=b4c1e3e84be93516406b1d213000d0fac3ad80e1 HTTP/1.1" 200 -
+172.22.0.1 - - [12/Apr/2022 06:58:02] "GET /add-task?file_id=97f90964689af586381bb6f5df3519a14bd93671&doctype=docx&raw_path=http%3A%2F%2F192.168.2.120%2Fseafhttp%2Ffiles%2F598d5c46-c830-4a0d-9ed4-ec2200bc1cbc%2Fasdf.docx HTTP/1.1" 200 -
+[2022-04-12 06:58:02,567] [DEBUG] root:187 _fetch_document_or_pdf start to fetch task <type: docx, id: 97f90964689af586381bb6f5df3519a14bd93671>
+[2022-04-12 06:58:02,602] [DEBUG] root:125 _convert_to_pdf start to convert task <type: docx, id: 97f90964689af586381bb6f5df3519a14bd93671>
+[2022-04-12 06:58:03,255] [DEBUG] root:137 _convert_to_pdf succefully converted <type: docx, id: 97f90964689af586381bb6f5df3519a14bd93671> to pdf
+[2022-04-12 06:58:03,256] [DEBUG] root:92 set_status removing temporary document /tmp/tmpt9rmkdmd.docx
+172.22.0.1 - - [12/Apr/2022 06:58:03] "GET /query-status?file_id=97f90964689af586381bb6f5df3519a14bd93671&doctype=document HTTP/1.1" 200 -
+172.22.0.1 - - [12/Apr/2022 06:58:03] "GET /get-converted-page?static_filename=97f90964689af586381bb6f5df3519a14bd93671.pdf&file_id=97f90964689af586381bb6f5df3519a14bd93671 HTTP/1.1" 200 -
