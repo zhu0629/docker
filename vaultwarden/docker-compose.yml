@@ -1,0 +1,9 @@
+version: '2.0'
+services:
+  db:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    volumes:
+      - ./data:/data/
+    ports:
+      - "80:80"
