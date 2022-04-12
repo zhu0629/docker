@@ -11,8 +11,8 @@ services:
       - 1080:1080
       - 1081:1081
     volumes:
-      - .config/:/etc/v2ray/
-      - .log:/var/log/v2ray/
+      - ./config.json:/etc/v2ray/config.json
+      - ./log:/var/log/v2ray/
 
     healthcheck:
       test: netstat -anp | grep 8801
