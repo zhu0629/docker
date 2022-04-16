@@ -5,5 +5,9 @@ services:
     container_name: vaultwarden
     volumes:
       - ./data:/data/
+      - ./ssl:/ssl/
+    environment:
+      - ADMIN_TOKEN=zAXjjInwv3ozsQ0a1kXykeQxUJ2INYsUmlbkbDbojB0XJb0I5WpBFTpI8y5lH7cb
+      - ROCKET_TLS={certs="/ssl/app.obdstar.top_chain.crt",key="/ssl/app.obdstar.top_key.key"}
     ports:
-      - "80:80"
+      - 8600:80
